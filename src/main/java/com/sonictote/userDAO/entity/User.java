@@ -23,10 +23,10 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Con esto generamos la id de manera automatica
 	private Long id;
 	
-	@Column (length = 50) // Le decimos que el dato no puede contener mas de 50 caracteres
+	@Column (length = 50, nullable = false) // Le decimos que el dato no puede contener mas de 50 caracteres
 	private String name;
 	
-	@Column (length = 50)
+	@Column (length = 50, nullable = false) //Con nuleable le decimos que los datos no pueden ser nulos
 	private String surname;
 	
 	
