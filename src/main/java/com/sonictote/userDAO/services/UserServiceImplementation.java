@@ -6,14 +6,12 @@ package com.sonictote.userDAO.services;
 
 import java.awt.print.Pageable;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
 import com.sonictote.userDAO.entity.User;
 import com.sonictote.userDAO.repository.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service //Le indicamos a Spring que es un servicio
 public class UserServiceImplementation implements UserService{
@@ -26,6 +24,7 @@ public class UserServiceImplementation implements UserService{
 	 * Muestra todos los usuarios
 	 */
 	@Override
+	//@Transactional(readOnly = true) no funiona buscar info
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
@@ -50,6 +49,7 @@ public class UserServiceImplementation implements UserService{
 	 * Guarda un usuario
 	 */
 	@Override
+	@Transactional
 	public User save(User user) {
 		return userRepository.save(user);
 	}
@@ -58,6 +58,7 @@ public class UserServiceImplementation implements UserService{
 	 * Elimina un usuario
 	 */
 	@Override
+	@Transactional
 	public void deleteById(Long id) {
 		userRepository.deleteById(id);
 	}
