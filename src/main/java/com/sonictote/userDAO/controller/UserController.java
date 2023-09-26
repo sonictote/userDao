@@ -1,6 +1,10 @@
 package com.sonictote.userDAO.controller;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +64,18 @@ public class UserController {
 	}
 
 	/*
+	 * Este metodo mostrara todos los usuarios de la base de datos
+	 */
+	@GetMapping("/{id}") // En get mapping se indica la infomacion que se necesita para buscar un usuario
+	// entre llaves
+	public List<User> readAll() {
+		List<User> users = StreamSupport
+				.stream(userService.findAll().spliterator(), false)
+				.collect(Collectors.toList());
+		return users;
+	}
+
+	/*
 	 * Este metodo se encargara de actualizar el usuario
 	 */
 	@PutMapping("/{id}")
@@ -79,10 +95,10 @@ public class UserController {
 	 */
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete (@PathVariable(value = "id") Long userId){
-		if(!userService.findById(userId).isPresent()) {
+	public ResponseEntity<?> delete(@PathVariable(value = "id") Long userId) {
+		if (!userService.findById(userId).isPresent()) {
 			return ResponseEntity.notFound().build();
-		}else {
+		} else {
 			userService.deleteById(userId);
 			return ResponseEntity.ok().build();
 		}
