@@ -2,14 +2,11 @@ package com.sonictote.userDAO.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.sonictote.userDAO.entity.User;
 import com.sonictote.userDAO.services.UserService;
-
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
 @RestController // Le indica a Spring boot que es un contralador y con esta anotacion indica que
 				// el valor de retorno es el cuerpo de la respuesta
@@ -66,11 +60,9 @@ public class UserController {
 	/*
 	 * Este metodo mostrara todos los usuarios de la base de datos
 	 */
-	@GetMapping("/{id}") // En get mapping se indica la infomacion que se necesita para buscar un usuario
-	// entre llaves
+	@GetMapping() 
 	public List<User> readAll() {
-		List<User> users = StreamSupport
-				.stream(userService.findAll().spliterator(), false)
+		List<User> users = StreamSupport.stream(userService.findAll().spliterator(), false)
 				.collect(Collectors.toList());
 		return users;
 	}
@@ -85,7 +77,8 @@ public class UserController {
 		if (!user.isPresent()) { // Si el Optional no es un usuario cosntruimos y devolvemos un not found (404)
 			return ResponseEntity.notFound().build();
 		} else { // Si existe, devolvemos un 200 y el JSON del usuario
-			BeanUtils.copyProperties(userDetails, user.get()); // Copia todo el objeto
+			user.get().setName(userDetails.getName());
+			user.get().setSurname(userDetails.getSurname());
 			return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user.get()));
 		}
 	}
